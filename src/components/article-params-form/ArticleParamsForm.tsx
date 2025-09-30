@@ -54,7 +54,7 @@ export const ArticleParamsForm = ({ onApply }: ArticleParamsFormProps) => {
 					[styles.container_open]: isOpen,
 				})}>
 				<form className={styles.form}>
-					<header className={styles.header}>
+					<header>
 						<h2 className={styles.title}>Задайте параметры</h2>
 					</header>
 
