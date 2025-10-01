@@ -2,7 +2,7 @@ import { ArrowButton } from 'src/ui/arrow-button';
 import { Button } from 'src/ui/button';
 
 import styles from './ArticleParamsForm.module.scss';
-import React, { MouseEvent, useState } from 'react';
+import React, { MouseEvent, useRef, useState } from 'react';
 import { clsx } from 'clsx';
 import { Select } from 'src/ui/select';
 import {
@@ -17,6 +17,8 @@ import {
 } from 'src/constants/articleProps';
 import { RadioGroup } from 'src/ui/radio-group';
 import { Separator } from 'src/ui/separator';
+import { useOutsideClickClose } from 'src/ui/select/hooks/useOutsideClickClose';
+import { Text } from 'src/ui/text';
 
 interface ArticleParamsFormProps {
 	onApply: (state: ArticleStateType) => void;
@@ -26,6 +28,7 @@ export const ArticleParamsForm = ({ onApply }: ArticleParamsFormProps) => {
 	const [isOpen, setIsOpen] = useState(false);
 	const [stateStyle, setStateStyle] =
 		useState<ArticleStateType>(defaultArticleState);
+	const rootRef = useRef<HTMLDivElement>(null);
 
 	const handleChange = (field: keyof ArticleStateType, value: OptionType) => {
 		setStateStyle((prev) => ({ ...prev, [field]: value }));
@@ -46,17 +49,25 @@ export const ArticleParamsForm = ({ onApply }: ArticleParamsFormProps) => {
 		setIsOpen((prev) => !prev);
 	};
 
+	useOutsideClickClose({
+		isOpen,
+		rootRef,
+		onClose: () => setIsOpen(false),
+		onChange: setIsOpen,
+	});
+
 	return (
 		<>
 			<ArrowButton isOpen={isOpen} onClick={toggleArrowButton} />
 			<aside
 				className={clsx(styles.container, {
 					[styles.container_open]: isOpen,
-				})}>
+				})}
+				ref={rootRef}>
 				<form className={styles.form}>
-					<header>
-						<h2 className={styles.title}>Задайте параметры</h2>
-					</header>
+					<Text as='h2' size={31} weight={800} uppercase>
+						Задайте параметры
+					</Text>
 
 					<Select
 						title={'Шрифт'}
